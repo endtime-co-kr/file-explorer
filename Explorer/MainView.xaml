@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Explorer"
+             xmlns:vm="clr-namespace:ExplorerViewModel;assembly=ExplorerViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:ExplorerMainViewModel/>
+    </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -14,11 +18,23 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="42" />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="42" />            
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-        <!--<controls:FolderPathMap Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding}" Margin="5,0,5,0" BorderBrush="DimGray" BorderThickness="0.5"/>-->
+
+        <TreeView
+                Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="1">            
+        </TreeView>
+
+        <DataGrid
+                  Grid.Row="1" Grid.Column="2" Grid.RowSpan="1" ColumnWidth="*" VerticalAlignment="Stretch" AutoGenerateColumns="False"
+                  HorizontalContentAlignment="Stretch"    
+                  VerticalContentAlignment="Center"                  
+                  GridLinesVisibility="None"                   
+                  SelectionMode="Extended" 
+                  SelectionUnit="FullRow">
+            
+        </DataGrid>
     </Grid>
 </UserControl>
