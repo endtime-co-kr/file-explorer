@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace ExplorerViewModel
 {
@@ -32,7 +34,7 @@ namespace ExplorerViewModel
         {
             _fileInfoCollection = new ObservableCollection<FileInfoViewModel>();
             DirectoryTreeVM = new DirectoryTreeViewModel();
-            Test();
+            GetAllDirectoryFromDrive();
         }
 
         public void Test()
@@ -64,6 +66,42 @@ namespace ExplorerViewModel
 
             DirectoryTreeVM.DirectoryTreeCollection?.Root.Children.ElementAt(1).AddChild(new DirectoryInfoViewModel() { Name = "b.1" });
             DirectoryTreeVM.DirectoryTreeCollection?.Root.Children.ElementAt(1).AddChild(new DirectoryInfoViewModel() { Name = "b.2" });
+        }
+
+        private void GetAllDirectoryFromDrive()
+        {
+            DirectoryTree? tree = DirectoryTreeVM.DirectoryTreeCollection;
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+
+            foreach (DriveInfo dname in allDrives)
+            {
+                if (dname.DriveType == DriveType.Fixed)
+                {
+                    tree?.Root.AddChild(new DirectoryInfoViewModel() { Name = dname.Name });
+                    GetAllDirectoryFromDirectory(tree?.Root.Children.Last(), dname.Name);
+                }
+            }
+        }
+
+        private void GetAllDirectoryFromDirectory(DirectoryTreeNode? node, string directory)
+        {
+            var directoryList = Directory.GetDirectories(directory);
+
+            foreach (string dir in directoryList)
+            {
+                try
+                {
+                    DirectoryInfo di = new DirectoryInfo(dir);
+                    if (di.Attributes.HasFlag(FileAttributes.System))
+                        continue;
+                    node?.AddChild(new DirectoryInfoViewModel() { Name = Path.GetFileName(dir) });
+                    GetAllDirectoryFromDirectory(node?.Children.Last(), dir);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    continue;
+                }
+            }
         }
     }
 }

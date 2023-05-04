@@ -23,8 +23,13 @@
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <TreeView
-                Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="1">            
+        <TreeView DataContext="{Binding DirectoryTreeVM}"
+                Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="1" ItemsSource="{Binding DirectoryTreeCollection.Root.Children}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:DirectoryTreeNode}" ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Data.Name}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
         </TreeView>
 
         <DataGrid
@@ -33,8 +38,7 @@
                   VerticalContentAlignment="Center"                  
                   GridLinesVisibility="None"                   
                   SelectionMode="Extended" 
-                  SelectionUnit="FullRow">
-            
+                  SelectionUnit="FullRow">            
         </DataGrid>
     </Grid>
 </UserControl>
